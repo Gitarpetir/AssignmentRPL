@@ -12,7 +12,13 @@ Add additional API endpoints and implement proper input validation and error han
 
 ## Task 2: Extend extraction logic
 
-Enhance the action item extraction functionality with more sophisticated pattern recognition and analysis.
+### Task 2: Extend extraction logic
+* **PR Link:** https://github.com/Gitarpetir/AssignmentRPL/pull/2
+* **Description:** Enhanced the `extract_action_items` logic using a compiled Regex pattern to efficiently and case-insensitively extract tasks (TODO, ACTION, TASK, BUG).
+* **Manual Review vs. Graphite AI Review:**
+  * **Manual Review:** The manual review praised the performance optimization of compiling the Regex globally. However, it caught a significant logic flaw: to pass the "Ship it!" test, the AI simply added `if line.endswith("!"):`. This is too broad and would incorrectly extract any normal sentence ending with an exclamation mark as an action item.
+  * **Graphite AI Review:** Graphite ran successfully but left **0 comments**.
+  * **Comparison:** The AI review was worse than the manual review. Graphite completely missed the over-extraction bug caused by the overly broad `endswith("!")` condition. It verified that the code passed the tests but failed to think about real-world edge cases outside the test suite.
 
 ## Task 3: Try adding a new model and relationships
 

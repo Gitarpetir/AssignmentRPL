@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy import asc, desc, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from ..db import get_db
 from ..models import Note
@@ -19,7 +19,7 @@ def list_notes(
     limit: int = Query(50, le=200),
     sort: str = Query("-created_at", description="Sort by field, prefix with - for desc"),
 ) -> list[NoteRead]:
-    stmt = select(Note)
+    stmt = select(Note).options(selectinload(Note.tags))
     if q:
         stmt = stmt.where((Note.title.contains(q)) | (Note.content.contains(q)))
 
@@ -71,7 +71,7 @@ def delete_note(note_id: int, db: Session = Depends(get_db)) -> Response:
 
 @router.get("/{note_id}", response_model=NoteRead)
 def get_note(note_id: int, db: Session = Depends(get_db)) -> NoteRead:
-    note = db.get(Note, note_id)
+    note = db.execute(select(Note).options(selectinload(Note.tags)).where(Note.id == note_id)).scalar_one_or_none()
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return NoteRead.model_validate(note)
