@@ -8,13 +8,17 @@ load_dotenv()
 NUM_RUNS_TIMES = 5
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = "You are a careful mathematician" \
+"Solve problems step by step using clear modular arithmetic reasoning" \
+"At the end, you MUST output the final result on a new line in the exact format:" \
+"Answer: <number>" \
+"Do not output anything after that final Answer line."
 
 
 USER_PROMPT = """
-Solve this problem, then give the final answer on the last line as "Answer: <number>".
 
 what is 3^{12345} (mod 100)?
+Let's think step by step
 """
 
 

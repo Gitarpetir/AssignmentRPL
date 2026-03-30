@@ -15,7 +15,8 @@ Keep the implementation minimal.
 """
 
 # TODO: Fill this in!
-YOUR_REFLEXION_PROMPT = ""
+YOUR_REFLEXION_PROMPT = """Kamu adalah asisten coding yang bertugas memperbaiki solusi sebelumnya.
+Tugasmu adalah memperbaiki kode fungsi is_valid_password(password: str) -> bool."""
 
 
 # Ground-truth test suite used to evaluate generated code
@@ -92,11 +93,8 @@ def generate_initial_function(system_prompt: str) -> str:
 
 
 def your_build_reflexion_context(prev_code: str, failures: List[str]) -> str:
-    """TODO: Build the user message for the reflexion step using prev_code and failures.
-
-    Return a string that will be sent as the user content alongside the reflexion system prompt.
-    """
-    return ""
+    daftar_error = "\n".join(failures)
+    return f"Kode sebelumnya:\n{prev_code}\n\nDaftar kesalahan:\n{daftar_error}\n\nTolong perbaiki kodenya sekarang."
 
 
 def apply_reflexion(

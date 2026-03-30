@@ -1,1 +1,1 @@
-"""API routers package (week4)."""
+"""API routers package for week 4."""

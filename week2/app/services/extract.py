@@ -87,3 +87,58 @@ def _looks_imperative(sentence: str) -> bool:
         "investigate",
     }
     return first.lower() in imperative_starters
+    # LLM-powered action item extraction using Ollama (llama3.1:8b)
+    # Generated for "Scaffold a New Feature" - Week 2 Assignment
+
+from typing import List
+import json
+
+def extract_action_items_llm(text: str) -> List[str]:
+    """
+    Uses Ollama (llama3.1:8b) to extract actionable items as a list of strings from the input text.
+
+    Returns an empty list if the LLM's response cannot be parsed as a JSON array of strings.
+    """
+        # Import here to avoid top-level dependency for users who don't need LLM mode
+    try:
+        import ollama
+    except ImportError:
+            # Ollama Python client not installed
+        return []
+
+    prompt = (
+        "Extract a list of actionable tasks from the following text as a JSON array of strings. "
+        "Only return the JSON array itself (no explanation or prose).\n\n"
+        f"Text:\n{text.strip()}\n\n"
+        "JSON:"
+    )
+
+    try:
+        response = ollama.chat(
+            model="llama3.1:8b",
+            messages=[{
+                "role": "user",
+                "content": prompt,
+            }],
+            options={
+                "temperature": 0.1,
+            },
+        )
+
+        output = response["message"]["content"].strip()
+        # If model wraps JSON in code blocks, strip them out
+        if output.startswith("```"):
+            output = output.strip("`")
+            # try to find JSON inside code block
+            lines = output.splitlines()
+            json_strs = [line for line in lines if not line.strip().startswith("json")]
+            output = "\n".join(json_strs).strip()
+
+            # Parse as JSON array of strings
+        data = json.loads(output)
+        if isinstance(data, list) and all(isinstance(x, str) for x in data):
+            return data
+        else:
+            return []
+    except Exception:
+        return []

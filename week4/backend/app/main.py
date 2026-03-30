@@ -6,16 +6,16 @@ from fastapi.staticfiles import StaticFiles
 
 from .db import apply_seed_if_needed, engine
 from .models import Base
-from .routers import action_items as action_items_router
-from .routers import notes as notes_router
+from .routers import health as health_router
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+FRONTEND_DIR = BASE_DIR / "frontend"
+DATA_DIR = BASE_DIR / "data"
 
 app = FastAPI(title="Modern Software Dev Starter (Week 4)")
 
-# Ensure data dir exists
-Path("data").mkdir(parents=True, exist_ok=True)
-
-# Mount static frontend
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
 
 
 @app.on_event("startup")
@@ -26,9 +26,7 @@ def startup_event() -> None:
 
 @app.get("/")
 async def root() -> FileResponse:
-    return FileResponse("frontend/index.html")
+    return FileResponse(FRONTEND_DIR / "index.html")
 
 
-# Routers
-app.include_router(notes_router.router)
-app.include_router(action_items_router.router)
+app.include_router(health_router.router)

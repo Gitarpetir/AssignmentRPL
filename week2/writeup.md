@@ -9,7 +9,7 @@ Fill out all of the `TODO`s in this file.
 
 ## SUBMISSION DETAILS
 
-Name: **TODO** \
+Name: Muhammad Alfi Gunawan \
 SUNet ID: **TODO** \
 Citations: **TODO**
 
@@ -22,13 +22,55 @@ For each exercise, please include what prompts you used to generate the answer, 
 ### Exercise 1: Scaffold a New Feature
 Prompt: 
 ```
-TODO
-``` 
+Implement a new function called extract_action_items_llm(text: str) -> List[str].
+
+Requirements:
+- Use Ollama chat() with the local model llama3.1:8b.
+- Extract actionable tasks from the input text.
+- Return a Python list of strings.
+- The model must output a JSON array of strings only.
+- Parse the JSON safely using json.loads().
+- Handle invalid JSON gracefully (return empty list on failure).
+- Keep temperature low (0.0).
+- Do not modify the existing extract_action_items() function.
 
 Generated Code Snippets:
 ```
-TODO: List all modified code files with the relevant line numbers.
-```
+def extract_action_items_llm(text: str) -> List[str]:
+    """
+    Uses Ollama (llama3.1:8b) to extract actionable items.
+    Returns a list of strings or empty list if parsing fails.
+    """
+    try:
+        response = chat(
+            model="llama3.1:8b",
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "Extract actionable tasks from the given text. "
+                        "Return ONLY a valid JSON array of strings. "
+                        "Do not include explanations, markdown, or extra text."
+                    ),
+                },
+                {
+                    "role": "user",
+                    "content": text,
+                },
+            ],
+            options={"temperature": 0.0},
+        )
+
+        output = response.message.content.strip()
+        data = json.loads(output)
+
+        if isinstance(data, list) and all(isinstance(x, str) for x in data):
+            return data
+
+        return []
+
+    except Exception:
+        return []
 
 ### Exercise 2: Add Unit Tests
 Prompt: 
@@ -38,8 +80,33 @@ TODO
 
 Generated Code Snippets:
 ```
-TODO: List all modified code files with the relevant line numbers.
-```
+from ..app.services.extract import extract_action_items_llm
+
+
+def test_llm_simple_sentences():
+    text = "Finish homework. Email professor."
+    items = extract_action_items_llm(text)
+
+    assert isinstance(items, list)
+    assert any("Finish homework" in item for item in items)
+    assert any("Email professor" in item for item in items)
+
+
+def test_llm_bullet_list():
+    text = """
+    - Set up database
+    - Implement endpoint
+    """
+    items = extract_action_items_llm(text)
+
+    assert isinstance(items, list)
+    assert any("Set up database" in item for item in items)
+    assert any("Implement endpoint" in item for item in items)
+
+
+def test_llm_empty_input():
+    items = extract_action_items_llm("")
+    assert isinstance(items, list)
 
 ### Exercise 3: Refactor Existing Code for Clarity
 Prompt: 

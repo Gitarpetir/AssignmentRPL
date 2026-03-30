@@ -1,1 +1,1 @@
-"""Application package for FastAPI backend (week4)."""
+"""FastAPI application package for week 4."""

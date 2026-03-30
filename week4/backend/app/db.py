@@ -29,7 +29,7 @@ def get_db() -> Iterator[Session]:
 
 @contextmanager
 def get_session() -> Iterator[Session]:
-    session = SessionLocal()
+    session: Session = SessionLocal()
     try:
         yield session
         session.commit()
@@ -49,8 +49,8 @@ def apply_seed_if_needed() -> None:
 
     seed_file = Path("./data/seed.sql")
     if newly_created and seed_file.exists():
-        with engine.begin() as conn:
+        with engine.begin() as connection:
             sql = seed_file.read_text()
             if sql.strip():
-                for statement in [s.strip() for s in sql.split(";") if s.strip()]:
-                    conn.execute(text(statement))
+                for statement in [item.strip() for item in sql.split(";") if item.strip()]:
+                    connection.execute(text(statement))

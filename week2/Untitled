@@ -1,0 +1,1 @@
+poetry run uvicorn week2.app.main:app --reload

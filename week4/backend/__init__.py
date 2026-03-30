@@ -1,1 +1,1 @@
-"""Backend package (week4)."""
+"""Backend package for week 4."""

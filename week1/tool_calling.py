@@ -70,7 +70,18 @@ TOOL_REGISTRY: Dict[str, Callable[..., str]] = {
 # ==========================
 
 # TODO: Fill this in!
-YOUR_SYSTEM_PROMPT = ""
+YOUR_SYSTEM_PROMPT = """
+Kamu adalah sistem pemanggil fungsi. Panggil tool 'output_every_func_return_type'.
+
+- Untuk argumen 'file_path', gunakan string kosong "" saja.
+- Jangan gunakan alamat palsu seperti '/path/to/your/file.py'.
+
+Jawab hanya dengan JSON:
+{
+  "tool": "output_every_func_return_type",
+  "args": { "file_path": "" }
+}
+"""
 
 
 def resolve_path(p: str) -> str:

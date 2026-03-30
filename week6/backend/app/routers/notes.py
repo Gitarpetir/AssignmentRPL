@@ -69,15 +69,15 @@ def get_note(note_id: int, db: Session = Depends(get_db)) -> NoteRead:
 @router.get("/unsafe-search", response_model=list[NoteRead])
 def unsafe_search(q: str, db: Session = Depends(get_db)) -> list[NoteRead]:
     sql = text(
-        f"""
+        """
         SELECT id, title, content, created_at, updated_at
         FROM notes
-        WHERE title LIKE '%{q}%' OR content LIKE '%{q}%'
+        WHERE title LIKE :search_query OR content LIKE :search_query
         ORDER BY created_at DESC
         LIMIT 50
         """
     )
-    rows = db.execute(sql).all()
+    rows = db.execute(sql, {"search_query": f"%{q}%"}).all()
     results: list[NoteRead] = []
     for r in rows:
         results.append(
