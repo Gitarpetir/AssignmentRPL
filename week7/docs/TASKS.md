@@ -10,8 +10,6 @@ Add additional API endpoints and implement proper input validation and error han
   - **Graphite AI Review:** Graphite ran successfully but left **0 comments**.
   - **Comparison:** In this specific task, the manual review was better. Graphite failed to notice the missing validations for the other models (missing the broader context of the application), whereas the manual review caught this inconsistency easily.
 
-## Task 2: Extend extraction logic
-
 ### Task 2: Extend extraction logic
 * **PR Link:** https://github.com/Gitarpetir/AssignmentRPL/pull/2
 * **Description:** Enhanced the `extract_action_items` logic using a compiled Regex pattern to efficiently and case-insensitively extract tasks (TODO, ACTION, TASK, BUG).
